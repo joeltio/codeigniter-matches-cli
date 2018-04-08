@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 
 /* first we make sure this isn't called from a web browser */
-if ( PHP_SAPI !== 'cli' ) exit('No web access allowed');
+if (PHP_SAPI !== 'cli') exit('No web access allowed');
 /* raise or eliminate limits we would otherwise put on http requests */
 set_time_limit(0);
 ini_set('memory_limit', '256M');
@@ -76,11 +76,11 @@ class Matches extends CI_Controller {
 
 	public function _remap($method, $params=array())
 	{
-		if(strpos($method,':'))
+		if (strpos($method,':'))
 		{
 			$method = str_replace(':','_',$method);
 		}
-		if(method_exists($this,$method))
+		if (method_exists($this,$method))
 		{
 			return call_user_func_array(array($this,$method),$params);
 		}
@@ -134,14 +134,14 @@ class Matches extends CI_Controller {
 		$what = filter_var($what, FILTER_SANITIZE_STRING);
 		$name = filter_var($name, FILTER_SANITIZE_STRING);
 		$can_create = array('app','controller','model','view','migration');
-		if(in_array($what, $can_create))
+		if (in_array($what, $can_create))
 		{
-			if(empty($name))
+			if (empty($name))
 			{
 				echo  $this->_ret.'You didn\'t provide a name for '.$what;
 				return FALSE;
 			}
-			switch($what)
+			switch ($what)
 			{
 				case 'app':
 					$this->create_app($name);
@@ -163,15 +163,15 @@ class Matches extends CI_Controller {
 		}
 		else
 		{
-			echo  $this->_ret.'I can only create: app, controller, model, migration';
+			echo $this->_ret.'I can only create: app, controller, model, migration';
 		}
 	}
 
 	public function create_app($app = NULL)
 	{
-		if(isset($app))
+		if (isset($app))
 		{
-			if(file_exists('application/controllers/'.$this->_filename($app).'.php') OR (class_exists(''.$app.'')) OR (class_exists(''.$app.'_model')))
+			if (file_exists('application/controllers/'.$this->_filename($app).'.php') OR (class_exists(''.$app.'')) OR (class_exists(''.$app.'_model')))
 			{
 				echo $app.' Controller or Model already exists in the application/controllers directory.';
 			}
@@ -197,32 +197,32 @@ class Matches extends CI_Controller {
 		$available = array('extend'=>'extend','e'=>'extend');
 		$params = func_get_args();
 		$arguments = array();
-		foreach($params as $parameter)
+		foreach ($params as $parameter)
 		{
 			$argument = explode(':',$parameter);
-			if(sizeof($argument)==1 && !isset($controller))
+			if (sizeof($argument)==1 && !isset($controller))
 			{
 				$controller = $argument[0];
 			}
-			elseif(array_key_exists($argument[0],$available))
+			elseif (array_key_exists($argument[0],$available))
 			{
 				$arguments[$available[$argument[0]]] = $argument[1];
 			}
 		}
-		if(isset($controller))
+		if (isset($controller))
 		{
 			$names = $this->_names($controller);
 			$class_name = $names['class'];
 			$file_name = $names['file'];
 			$directories = $names['directories'];
-			if(file_exists(APPPATH.'controllers/'.$file_name.'.php'))
+			if (file_exists(APPPATH.'controllers/'.$file_name.'.php'))
 			{
 				echo $this->_ret.$class_name.' Controller already exists in the application/controllers'.$directories.' directory.';
 			}
 			else
 			{
 				$f = $this->_get_template('controller');
-				if($f === FALSE) return FALSE;
+				if ($f === FALSE) return FALSE;
 				$this->_find_replace['{{CONTROLLER}}'] = $class_name;
 				$this->_find_replace['{{CONTROLLER_FILE}}'] = $file_name.'.php';
 				$this->_find_replace['{{MV}}'] = strtolower($class_name);
@@ -230,11 +230,11 @@ class Matches extends CI_Controller {
 				$extends = in_array(strtolower($extends),array('my','ci')) ? strtoupper($extends) : ucfirst($extends);
 				$this->_find_replace['{{C_EXTENDS}}'] = $extends;
 				$f = strtr($f,$this->_find_replace);
-				if(strlen($directories)>0 && !file_exists(APPPATH.'controllers/'.$directories))
+				if (strlen($directories)>0 && !file_exists(APPPATH.'controllers/'.$directories))
 				{
 					mkdir(APPPATH.'controllers/'.$directories, 0777, true);
 				}
-				if(write_file(APPPATH.'controllers/'.$file_name.'.php',$f))
+				if (write_file(APPPATH.'controllers/'.$file_name.'.php',$f))
 				{
 					echo $this->_ret.'Controller '.$class_name.' has been created inside '.APPPATH.'controllers/'.$directories.'.';
 					return TRUE;
@@ -260,32 +260,32 @@ class Matches extends CI_Controller {
 		$available = array('extend'=>'extend','e'=>'extend');
 		$params = func_get_args();
 		$arguments = array();
-		foreach($params as $parameter)
+		foreach ($params as $parameter)
 		{
 			$argument = explode(':',$parameter);
-			if(sizeof($argument)==1 && !isset($model))
+			if (sizeof($argument)==1 && !isset($model))
 			{
 				$model = $argument[0];
 			}
-			elseif(array_key_exists($argument[0],$available))
+			elseif (array_key_exists($argument[0],$available))
 			{
 				$arguments[$available[$argument[0]]] = $argument[1];
 			}
 		}
-		if(isset($model))
+		if (isset($model))
 		{
 			$names = $this->_names($model);
 			$class_name = $names['class'];
 			$file_name = $names['file'];
 			$directories = $names['directories'];
-			if(file_exists(APPPATH.'models/'.$file_name.'.php'))
+			if (file_exists(APPPATH.'models/'.$file_name.'.php'))
 			{
 				echo $this->_ret.$class_name.' Model already exists in the application/models'.$directories.' directory.';
 			}
 			else
 			{
 				$f = $this->_get_template('model');
-				if($f === FALSE) return FALSE;
+				if ($f === FALSE) return FALSE;
 				$this->_find_replace['{{MODEL}}'] = $class_name;
 				$this->_find_replace['{{MODEL_FILE}}'] = $file_name.'.php';
 
@@ -294,11 +294,11 @@ class Matches extends CI_Controller {
 
 				$this->_find_replace['{{MO_EXTENDS}}'] = $extends;
 				$f = strtr($f,$this->_find_replace);
-				if(strlen($directories)>0 && !file_exists(APPPATH.'models/'.$directories))
+				if (strlen($directories)>0 && !file_exists(APPPATH.'models/'.$directories))
 				{
 					mkdir(APPPATH.'models/'.$directories, 0777, true);
 				}
-				if(write_file(APPPATH.'models/'.$file_name.'.php',$f))
+				if (write_file(APPPATH.'models/'.$file_name.'.php',$f))
 				{
 					echo $this->_ret.'Model '.$class_name.' has been created inside '.APPPATH.'models/'.$directories.'.';
 					return TRUE;
@@ -325,38 +325,38 @@ class Matches extends CI_Controller {
 		$available = array();
 		$params = func_get_args();
 		$arguments = array();
-		foreach($params as $parameter)
+		foreach ($params as $parameter)
 		{
 			$argument = explode(':',$parameter);
-			if(sizeof($argument)==1 && !isset($view))
+			if (sizeof($argument)==1 && !isset($view))
 			{
 				$view = $argument[0];
 			}
-			elseif(array_key_exists($argument[0],$available))
+			elseif (array_key_exists($argument[0],$available))
 			{
 				$arguments[$available[$argument[0]]] = $argument[1];
 			}
 		}
-		if(isset($view))
+		if (isset($view))
 		{
 			$names = $this->_names($view);
 			$file_name = strtolower($names['file']);
 			$directories = $names['directories'];
-			if(file_exists(APPPATH.'views/'.$file_name.'.php'))
+			if (file_exists(APPPATH.'views/'.$file_name.'.php'))
 			{
 				echo $this->_ret.$file_name.' View already exists in the application/views/'.$directories.' directory.';
 			}
 			else
 			{
 				$f = $this->_get_template('view');
-				if($f === FALSE) return FALSE;
+				if ($f === FALSE) return FALSE;
 				$this->_find_replace['{{VIEW}}'] = $file_name.'.php';
 				$f = strtr($f,$this->_find_replace);
-				if(strlen($directories)>0 && !file_exists(APPPATH.'views/'.$directories))
+				if (strlen($directories)>0 && !file_exists(APPPATH.'views/'.$directories))
 				{
 					mkdir(APPPATH.'views/'.$directories, 0777, true);
 				}
-				if(write_file(APPPATH.'views/'.$file_name.'.php',$f))
+				if (write_file(APPPATH.'views/'.$file_name.'.php',$f))
 				{
 					echo $this->_ret.'View '.$file_name.' has been created inside '.APPPATH.'views/'.$directories.'.';
 					return TRUE;
@@ -397,16 +397,16 @@ class Matches extends CI_Controller {
 		$this->load->library('migration');
 		$migrations = $this->migration->find_migrations();
 		$migration_keys = array();
-		foreach($migrations as $key => $migration)
+		foreach ($migrations as $key => $migration)
 		{
 			$migration_keys[] = $key;
 		}
-		if(isset($version) && array_key_exists($version,$migrations) && $this->migration->version($version))
+		if (isset($version) && array_key_exists($version,$migrations) && $this->migration->version($version))
 		{
 			echo $this->_ret.'The migration was reset to the version: '.$version;
 			return TRUE;
 		}
-		elseif(isset($version) && !array_key_exists($version,$migrations))
+		elseif (isset($version) && !array_key_exists($version,$migrations))
 		{
 			echo $this->_ret.'The migration with version number '.$version.' doesn\'t exist.';
 		}
@@ -414,7 +414,7 @@ class Matches extends CI_Controller {
 		{
 			$penultimate = (sizeof($migration_keys)==1) ? 0 : $migration_keys[sizeof($migration_keys) - 2];
 
-			if($this->migration->version($penultimate))
+			if ($this->migration->version($penultimate))
 			{
 				echo $this->_ret.'The migration has been rolled back successfully.';
 				return TRUE;
@@ -430,7 +430,7 @@ class Matches extends CI_Controller {
 	public function reset_migration()
 	{
 		$this->load->library('migration');
-		if($this->migration->current()!== FALSE)
+		if ($this->migration->current()!== FALSE)
 		{
 			echo $this->_ret.'The migration was reset to the version set in the config file.';
 			return TRUE;
@@ -446,7 +446,7 @@ class Matches extends CI_Controller {
 	public function verify_migration_enabled()
 	{
 		$migration_enabled = $this->config->item('migration_enabled');
-		if($migration_enabled===FALSE)
+		if ($migration_enabled===FALSE)
 		{
 			echo $this->_ret.'Your app is not migration enabled. Enable it inside application/config/migration.php';
 		}
@@ -458,26 +458,26 @@ class Matches extends CI_Controller {
 		$available = array('extend'=>'extend','e'=>'extend','table'=>'table','t'=>'table');
 		$params = func_get_args();
 		$arguments = array();
-		foreach($params as $parameter)
+		foreach ($params as $parameter)
 		{
 			$argument = explode(':',$parameter);
-			if(sizeof($argument)==1 && !isset($action))
+			if (sizeof($argument)==1 && !isset($action))
 			{
 				$action = $argument[0];
 			}
-			elseif(array_key_exists($argument[0],$available))
+			elseif (array_key_exists($argument[0],$available))
 			{
 				$arguments[$available[$argument[0]]] = $argument[1];
 			}
 		}
-		if(isset($action))
+		if (isset($action))
 		{
 			$class_name = 'Migration_'.ucfirst($action);
 			$this->config->load('migration',TRUE);
 			$migration_path = $this->config->item('migration_path','migration');
-			if(!file_exists($migration_path))
+			if (!file_exists($migration_path))
 			{
-				if(mkdir($migration_path,0755))
+				if (mkdir($migration_path,0755))
 				{
 					echo $this->_ret.'Folder migrations created.';
 				}
@@ -489,11 +489,11 @@ class Matches extends CI_Controller {
 			}
 			$this->verify_migration_enabled();
 			$migration_type = $this->config->item('migration_type','migration');
-			if(empty($migration_type))
+			if (empty($migration_type))
 			{
 				$migration_type = 'sequential';
 			}
-			if($migration_type == 'timestamp')
+			if ($migration_type == 'timestamp')
 			{
 				$file_name = date('YmdHis').'_'.strtolower($action);
 			}
@@ -503,7 +503,7 @@ class Matches extends CI_Controller {
 				foreach (glob($migration_path.'*.php') as $migration)
 				{
 					$pattern = '/[0-9]{3}/';
-					if(preg_match($pattern, $migration, $matches))
+					if (preg_match($pattern, $migration, $matches))
 					{
 						$migration_version = intval($matches[0]);
 						$latest_migration = ($migration_version > $latest_migration) ? $migration_version : $latest_migration;
@@ -512,7 +512,7 @@ class Matches extends CI_Controller {
 				$latest_migration = (string)++$latest_migration;
 				$file_name = str_pad($latest_migration, 3, '0', STR_PAD_LEFT).'_'.strtolower($action);
 			}
-			if(file_exists($migration_path.$file_name) OR (class_exists($class_name)))
+			if (file_exists($migration_path.$file_name) OR (class_exists($class_name)))
 			{
 				echo $this->_ret.$class_name.' Migration already exists.';
 				return FALSE;
@@ -520,7 +520,7 @@ class Matches extends CI_Controller {
 			else
 			{
 				$f = $this->_get_template('migration');
-				if($f === FALSE) return FALSE;
+				if ($f === FALSE) return FALSE;
 				$this->_find_replace['{{MIGRATION}}'] = $class_name;
 				$this->_find_replace['{{MIGRATION_FILE}}'] = $file_name;
 				$this->_find_replace['{{MIGRATION_PATH}}'] = $migration_path;
@@ -531,9 +531,9 @@ class Matches extends CI_Controller {
 				$this->_find_replace['{{MI_EXTENDS}}'] = $extends;
 				$table = 'SET_YOUR_TABLE_HERE';
 
-				if(array_key_exists('table',$arguments))
+				if (array_key_exists('table',$arguments))
 				{
-					if($arguments['table'] == '%inherit%' || $arguments['table'] == '%i%')
+					if ($arguments['table'] == '%inherit%' || $arguments['table'] == '%i%')
 					{
 						$table = preg_replace('/rename_|remove_|modify_|delete_|add_|create_|_table|_tbl/i', '', $action);
 					}
@@ -545,7 +545,7 @@ class Matches extends CI_Controller {
 
 				$this->_find_replace['{{TABLE}}'] = $table;
 				$f = strtr($f,$this->_find_replace);
-				if(write_file($migration_path.$file_name.'.php',$f))
+				if (write_file($migration_path.$file_name.'.php',$f))
 				{
 					echo $this->_ret.'Migration '.$class_name.' has been created.';
 					return TRUE;
@@ -565,25 +565,25 @@ class Matches extends CI_Controller {
 
 	public function encryption_key($string = NULL)
 	{
-		if(is_null($string))
+		if (is_null($string))
 		{
 			$string = microtime();
 		}
 		$key = hash('ripemd128', $string);
 		$files = $this->_search_files(APPPATH.'config/','config.php');
-		if(!empty($files))
+		if (!empty($files))
 		{
 			$search = '$config[\'encryption_key\'] = \'\';';
 			$replace = '$config[\'encryption_key\'] = \''.$key.'\';';
-			foreach($files as $file)
+			foreach ($files as $file)
 			{
 				$file = trim($file);
 				// is weird, but it seems that the file cannot be found unless I do some trimming
 				$f = file_get_contents($file);
-				if(strpos($f, $search)!==FALSE)
+				if (strpos($f, $search)!==FALSE)
 				{
 					$f = str_replace($search, $replace, $f);
-					if(write_file($file,$f))
+					if (write_file($file,$f))
 					{
 						echo $this->_ret.'Encryption key '.$key.' added to '.$file.'.';
 					}
@@ -609,7 +609,7 @@ class Matches extends CI_Controller {
 		$dir = new RecursiveDirectoryIterator($path);
 		$ite = new RecursiveIteratorIterator($dir);
 		$files = array();
-		foreach($ite as $oFile)
+		foreach ($ite as $oFile)
 		{
 			if($oFile->getFilename()=='config.php')
 			{
@@ -623,7 +623,7 @@ class Matches extends CI_Controller {
 	private function _names($str)
 	{
 		$str = strtolower($str);
-		if(strpos($str,'.'))
+		if (strpos($str,'.'))
 		{
 			$structure = explode('.', $str);
 			$class_name = array_pop($structure);
@@ -657,7 +657,7 @@ class Matches extends CI_Controller {
 	private function _get_template($type)
 	{
 		$template_loc = $this->_templates_loc.$type.'_template.txt';
-		if(file_exists($template_loc))
+		if (file_exists($template_loc))
 		{
 			$f = file_get_contents($template_loc);
 			return $f;

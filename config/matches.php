@@ -4,10 +4,10 @@
  * Configuration for Matches controller
  */
 
- 
+
 /**
  * Configure the templates directory
- */ 
+ */
 $config['templates'] = 'views/matches_templates/';
 
 
